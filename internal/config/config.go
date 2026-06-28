@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 const appName = "searxng-cli"
@@ -21,18 +22,50 @@ type Environment struct {
 	URL string `json:"url"`
 }
 
-// DefaultPath returns the default config path.
-func DefaultPath() string {
+// DefaultPath returns the default config path for the current OS.
+func DefaultPath() (string, error) {
+	switch runtime.GOOS {
+	case "darwin":
+		return macOSDefaultPath()
+	case "linux":
+		return linuxDefaultPath()
+	default:
+		return "", fmt.Errorf("unsupported OS %q for default config path", runtime.GOOS)
+	}
+}
+
+func macOSDefaultPath() (string, error) {
+	homeDir, err := userHomeDir()
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Join(homeDir, ".config", appName, "config.json"), nil
+}
+
+func linuxDefaultPath() (string, error) {
 	if xdgConfigHome := os.Getenv("XDG_CONFIG_HOME"); xdgConfigHome != "" {
-		return filepath.Join(xdgConfigHome, appName, "config.json")
+		return filepath.Join(xdgConfigHome, appName, "config.json"), nil
 	}
 
-	userConfigDir, err := os.UserConfigDir()
-	if err != nil || userConfigDir == "" {
-		return filepath.Join(".", "config.json")
+	homeDir, err := userHomeDir()
+	if err != nil {
+		return "", err
 	}
 
-	return filepath.Join(userConfigDir, appName, "config.json")
+	return filepath.Join(homeDir, ".config", appName, "config.json"), nil
+}
+
+func userHomeDir() (string, error) {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		return "", fmt.Errorf("resolve home directory: %w", err)
+	}
+	if homeDir == "" {
+		return "", errors.New("resolve home directory: empty home directory")
+	}
+
+	return homeDir, nil
 }
 
 // Load reads and validates configuration from path.

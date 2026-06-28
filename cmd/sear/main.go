@@ -23,7 +23,11 @@ func main() {
 
 func loadConfig(configPath string) (*config.Config, error) {
 	if configPath == "" {
-		configPath = config.DefaultPath()
+		defaultPath, err := config.DefaultPath()
+		if err != nil {
+			return nil, err
+		}
+		configPath = defaultPath
 	}
 
 	return config.Load(configPath)

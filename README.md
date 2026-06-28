@@ -39,17 +39,25 @@ Available flags:
 
 ## Configuration
 
-The CLI reads configuration from:
+On Linux, the CLI reads configuration from:
 
 ```text
 $XDG_CONFIG_HOME/searxng-cli/config.json
 ```
 
-If `XDG_CONFIG_HOME` is not set, it uses the OS user config directory, usually:
+If `XDG_CONFIG_HOME` is not set, Linux falls back to:
 
 ```text
 $HOME/.config/searxng-cli/config.json
 ```
+
+On macOS, the CLI reads configuration from:
+
+```text
+$HOME/.config/searxng-cli/config.json
+```
+
+For unsupported operating systems, pass an explicit path with `-config`.
 
 Example configuration:
 
