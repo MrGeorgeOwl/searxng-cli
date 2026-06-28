@@ -1,0 +1,47 @@
+# Go build outputs
+/bin/
+/build/
+/dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go workspace and vendoring generated locally
+go.work
+go.work.sum
+/vendor/
+
+# Test and coverage artifacts
+coverage.out
+coverage.html
+*.coverprofile
+
+# Dependency/cache directories
+.cache/
+.tmp/
+tmp/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+config.json
+config.local.json
+*.local.json
+
+# Logs
+*.log
+logs/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

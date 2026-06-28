@@ -1,0 +1,7 @@
+{
+  "environments": {
+    "default": {
+      "url": "http://localhost:8080"
+    }
+  }
+}
